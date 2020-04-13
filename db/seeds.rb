@@ -1,5 +1,11 @@
 require_relative '../config/environment.rb'
 
+User.destroy_all
+Cocktail.destroy_all
+Ingredient.destroy_all
+CocktailIngredient.destroy_all
+UserCocktail.destroy_all 
+
 # Users
 sam = User.create(name: "Sam")
 joanna = User.create(name: "Joanna")
@@ -23,5 +29,19 @@ prosecco = Ingredient.create(name: "Prosecco")
 soda_water = Ingredient.create(name: "Soda Water")
 
 # Cocktail Ingredients
+stormy.ingredients << rum
+stormy.ingredients << ginger_beer
+margarita.ingredients << tequila 
+margarita.ingredients << lime 
+margarita.ingredients << syrup 
+martini.ingredients << gin
+martini.ingredients << vermouth 
+aperol_spritz.ingredients << aperol
+aperol_spritz.ingredients << prosecco
+aperol_spritz.ingredients << soda_water
 
 # User Cocktails
+joanna.cocktails << margarita
+joanna.cocktails << martini
+sam.cocktails << martini
+sam.cocktails << aperol_spritz
