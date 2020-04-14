@@ -17,16 +17,40 @@ def search
   end
 end
 
-def retrieve_user_favorites
+def find_user
   puts "What is your name?"
   name = gets.chomp
   user = User.where("name like ?", "%#{name}%").first
+end
+
+def retrieve_user_favorites
+  user = find_user
 
   puts "Your saved cocktails are:"
   user.print_saved_cocktails
 end
 
+def add_new_favorite
+user = find_user
+
+puts "Enter the name of the cocktail you want to add:"
+cocktail = gets.chomp
+found_cocktail = Cocktail.search_cocktails(cocktail)
+
+  if user.cocktails.include? found_cocktail.first
+    puts "This cocktail is already in your favorites. Your saved cocktails are:"
+    user.print_saved_cocktails
+
+  else
+    user.cocktails << found_cocktail.first
+    puts "#{found_cocktail.first.name} added to your favorites. Your saved cocktails are now:"
+    user.print_saved_cocktails
+  end
+end
+
+
 # Actual run file starts here
 
-retrieve_user_favorites
+# retrieve_user_favorites
+# add_new_favorite
 # search
