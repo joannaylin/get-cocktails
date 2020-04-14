@@ -10,3 +10,6 @@ require_relative '../apps/models/cocktail_ingredient.rb'
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db/development.db')
 require_all 'lib'
+
+# comment this in and out to see/hide SQL queries
+ActiveRecord::Base.logger = nil
