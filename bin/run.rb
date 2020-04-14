@@ -20,7 +20,11 @@ end
 def find_user
   puts "What is your name?"
   name = gets.chomp
-  user = User.where("name like ?", "%#{name}%").first
+  if User.where("name like ?", "%#{name}%").first
+    user = User.where("name like ?", "%#{name}%").first
+  else
+    user = User.create(name: name)
+  end
 end
 
 def retrieve_user_favorites
@@ -50,7 +54,6 @@ end
 
 
 # Actual run file starts here
-
-# retrieve_user_favorites
-# add_new_favorite
-# search
+retrieve_user_favorites
+add_new_favorite
+#search
