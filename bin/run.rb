@@ -17,6 +17,16 @@ def search
   end
 end
 
+def retrieve_user_favorites
+  puts "What is your name?"
+  name = gets.chomp
+  user = User.where("name like ?", "%#{name}%").first
+
+  puts "Your saved cocktails are:"
+  user.print_saved_cocktails
+end
+
 # Actual run file starts here
 
-search
+retrieve_user_favorites
+# search
