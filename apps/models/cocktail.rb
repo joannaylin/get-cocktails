@@ -6,7 +6,7 @@ class Cocktail < ActiveRecord::Base
 
   # List all the cocktails stored within the app
   def self.retrieve_cocktail_names
-    self.all.map { |cocktail| puts cocktail.name }
+    self.all.map { |cocktail| cocktail.name }
   end
 
   def self.search_cocktails(search_term)
@@ -16,5 +16,8 @@ class Cocktail < ActiveRecord::Base
   def print_ingredient_names
     self.ingredients.map { |ingredient| ingredient.name }
   end
+
+
+
 
 end

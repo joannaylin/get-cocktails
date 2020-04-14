@@ -17,6 +17,35 @@ def search
   end
 end
 
+def search_ingredients
+  puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
+  ingredient = gets.chomp
+  found_ingredient = Ingredient.search_cocktails(ingredient)
+
+  if found_ingredient
+    puts "The following drinks contain ingredient, #{ingredient}:"
+    found_ingredient.first.print_cocktail_names
+  else
+    puts "Sorry, that ingredient could not be found."
+  end
+
+end
+
+def update_rating
+  puts "Let's update the rating for one of your favorite drinks! Enter the drink you want to update:"
+  cocktail = gets.chomp
+  found_cocktail = Cocktail.search_cocktails(cocktail)
+
+  if found_cocktail 
+    puts "What rating would you give #{found_cocktail.first.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
+    updated_rating = gets.chomp
+    found_cocktail.first.user_cocktails.update(rating: updated_rating)
+  else
+    puts "Sorry, that drink could not be found in your favorites list."
+  end
+end
+
+
 def find_user
   puts "What is your name?"
   name = gets.chomp
@@ -70,3 +99,6 @@ user.delete_favorite
 #   user.print_saved_cocktails
 # end
 
+# search
+# search_ingredients
+# update_rating
