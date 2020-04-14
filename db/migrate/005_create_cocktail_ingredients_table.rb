@@ -1,4 +1,4 @@
-class CreateCocktailIngredientsTable < ActiveRecord::Migration[5.0]
+class CreateCocktailIngredientsTable < ActiveRecord::Migration[6.0]
 
   def change
     create_table :cocktail_ingredients do |t|
