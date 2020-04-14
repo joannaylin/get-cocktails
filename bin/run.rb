@@ -45,8 +45,11 @@ def update_rating
   end
 end
 
+# App starts
 
-def find_user
+
+
+def welcome
   puts "What is your name?"
   name = gets.chomp
   if User.where("name like ?", "%#{name}%").first
@@ -54,51 +57,66 @@ def find_user
   else
     user = User.create(name: name)
   end
+  puts "Welcome to the cocktail app, #{user.name}. Type the number corresponding to what you want to do:"
+  user
 end
 
+def choice(user)
+  puts <<-TEXT
+  Please enter the number corresponding to what you want to do:
+  1. Search cocktails by name
+  2. Search cocktails by ingredient
+  3. See your favorite cocktails
+  4. Add a new cocktail to your favorites
+  5. Update a rating for one of your favorite cocktails
+  6. Delete a cocktail from your favorites
+  7. Exit the program
+  ****** Enter your choice: ******
+  TEXT
+  input = gets.chomp
+  case input.to_i
+  when 1
+    search
+    choice(user)
+  when 2
+    search_ingredients
+    choice(user)
+  when 3
+    user.retrieve_user_favorites
+    choice(user)
+  when 4 
+    user.add_new_favorite
+    choice(user)
+  when 5
+    update_rating # Put this into users please :)
+  when 6
+    user.delete_favorite
+    choice(user)
+  when 7
+    # user.leave
+  else
+    "Sorry, I don't recognise that option."
+    choice(user)
+  end
+end
+
+def run
+user = welcome
+choice(user)
+end
+
+run
+
 # Actual run file starts here
-user = find_user
-user.retrieve_user_favorites
-user.add_new_favorite
-# search
-user.delete_favorite
-
-# def retrieve_user_favorites
-#   user = find_user
-
-#   puts "Your saved cocktails are:"
-#   user.print_saved_cocktails
-# end
-
-# def add_new_favorite
 # user = find_user
+# user.retrieve_user_favorites
+# user.add_new_favorite
+# # search
+# user.delete_favorite
 
-# puts "Enter the name of the cocktail you want to add:"
-# cocktail = gets.chomp
-# found_cocktail = Cocktail.search_cocktails(cocktail)
-
-#   if user.cocktails.include? found_cocktail.first
-#     puts "This cocktail is already in your favorites. Your saved cocktails are:"
-#     user.print_saved_cocktails
-
-#   else
-#     user.cocktails << found_cocktail.first
-#     puts "#{found_cocktail.first.name} added to your favorites. Your saved cocktails are now:"
-#     user.print_saved_cocktails
-#   end
-# end
-
-# def delete_favorite
-#   user = find_user
-#   retrieve_user_favorites
-#   puts "Enter the name of the cocktail that you want to remove:"
-#   cocktail_to_delete = gets.chomp
-#   found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
-#   user.cocktails = user.cocktails.reject { |cocktail| cocktail == found_cocktail}
-#   puts "Your saved cocktails are now:"
-#   user.print_saved_cocktails
-# end
-
-# search
 # search_ingredients
-# update_rating
+
+# This will go in the user file!
+# def leave
+#   puts "Thanks for using the cocktail app #{self.name}. See you soon."
+# end
