@@ -8,8 +8,8 @@ require_relative '../apps/models/ingredient.rb'
 require_relative '../apps/models/user_cocktail.rb'
 require_relative '../apps/models/cocktail_ingredient.rb'
 
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db/development.db')
+# ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'db/development.db')
 require_all 'lib'
 
-# comment this in and out to see/hide SQL queries
-ActiveRecord::Base.logger = nil
+connection_details = YAML::load(File.open('config/database.yml'))
+ActiveRecord::Base.establish_connection(connection_details)
