@@ -9,9 +9,9 @@ class Cocktail < ActiveRecord::Base
     self.all.map { |cocktail| cocktail.name }
   end
 
-  # def self.search_cocktails(search_term)
-  #   cocktails = Cocktail.where("name like ?", "%#{search_term}%")
-  # end
+  def self.search_cocktails(search_term)
+    cocktails = Cocktail.where("name like ?", "%#{search_term}%")
+  end
 
   def self.internet_cocktails(search_term)
   
