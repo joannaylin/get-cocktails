@@ -1,44 +1,8 @@
 require_relative '../config/environment'
 
-def search_cocktails
-  puts "Let's search for a cocktail. Enter a cocktail you want to see:"
-  cocktail = gets.chomp
-  found_cocktail_list = Cocktail.internet_cocktails(cocktail)
-
-  if found_cocktail_list
-    found_cocktail_list.each do |name, ingredients|
-      puts "name: #{name}"
-      puts "ingredients: #{ingredients.join(", ")}"
-    end
-  else
-    puts "Sorry, that search term doesn't match anything in the database."
-  end
-  found_cocktail_list
-end
-
-def search_ingredients
-  puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
-  ingredient = gets.chomp
-  found_ingredient = Ingredient.internet_search_cocktails(ingredient)
-
-  if found_ingredient
-    found_ingredient.each do |name, ingredients|
-      puts "name: #{name}"
-      puts "ingredients: #{ingredients.join(", ")}"
-    end
-  else
-    puts "Sorry, that ingredient could not be found."
-  end
-  found_ingredient
-end
-
-
-
-# App starts
-
-
-
 def welcome
+  font = TTY::Font.new(:doom)
+  puts font.write("The Bubbly App")
   puts "What is your name?"
   name = gets.chomp
   if User.where("name like ?", "%#{name}%").first
@@ -46,7 +10,7 @@ def welcome
   else
     user = User.create(name: name)
   end
-  puts "Welcome to the cocktail app, #{user.name}. Type the number corresponding to what you want to do:"
+  puts "Welcome to the cocktail app, #{user.name}."
   user
 end
 
@@ -65,10 +29,10 @@ def choice(user)
   input = gets.chomp
   case input.to_i
   when 1
-    search_cocktails
+    user.search_cocktails
     choice(user)
   when 2
-    search_ingredients
+    user.search_ingredients
     choice(user)
   when 3
     user.retrieve_user_favorites
@@ -96,9 +60,3 @@ choice(user)
 end
 
 run
-
-# Actual run file starts here
-# user = find_user
-# user.retrieve_user_favorites
-# user.add_new_favorite
-# user.delete_favorite
