@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
     else
       puts "Sorry, that search term doesn't match anything in the database."
     end
+
     puts "Type in the name of the cocktail you want to save into your favorites:"
     cocktail = gets.chomp
     if found_cocktail_list.include? cocktail
@@ -43,6 +44,7 @@ class User < ActiveRecord::Base
     else
       puts "Sorry, that ingredient could not be found."
     end
+
     puts "Type in the name of the cocktail you want to save into your favorites:"
     cocktail = gets.chomp
     if found_ingredient.include? cocktail
@@ -65,13 +67,11 @@ class User < ActiveRecord::Base
   end
   
   def retrieve_user_favorites
-  
     puts "Your saved cocktails are:"
     self.print_saved_cocktails
   end
   
   def add_new_favorite
-  
   puts "Enter the name of the cocktail you want to add:"
   cocktail = gets.chomp
   found_cocktail = Cocktail.search_cocktails(cocktail)
@@ -85,6 +85,7 @@ class User < ActiveRecord::Base
       puts "#{found_cocktail.first.name} added to your favorites. Your saved cocktails are now:"
       self.print_saved_cocktails
     end
+
   end
   
   def delete_favorite
