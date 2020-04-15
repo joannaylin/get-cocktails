@@ -47,11 +47,10 @@ class User < ActiveRecord::Base
     found_cocktail = self.cocktails.find_by(name: cocktail.capitalize)
     if found_cocktail 
       puts "What rating would you give #{found_cocktail.name.downcase} on a scale of 1-10? 1 being the worst, and 10 being the best."
-      updated_rating = gets.chomp
+      updated_rating = gets.chomp.to_i
       # below line will update--> but it will also update if you have it in your favorites as well. buggy. need to fix.
-      found_cocktail.user_cocktails.update(rating: updated_rating.to_i)
-      puts "Thanks! Your rating has now been updated."
-      # trying to get it to print a result back to the user so that they can visually see the update, but no dice. need to fix.
+      found_cocktail.user_cocktails.update(rating: updated_rating)
+      puts "Thanks! Your rating for #{found_cocktail.name.downcase} is now #{updated_rating}."
     else
       puts "Sorry, that drink could not be found in your favorites list."
     end
