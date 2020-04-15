@@ -1,5 +1,5 @@
-current directory: /Users/samgorick/Documents/Flatiron School/1 Ruby/3rd week/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
-/Users/samgorick/.rvm/rubies/ruby-2.6.1/bin/ruby -I /Users/samgorick/.rvm/rubies/ruby-2.6.1/lib/ruby/site_ruby/2.6.0 -r ./siteconf20200415-55686-14ge70s.rb extconf.rb
+current directory: /Users/joannalin/Flatiron/code/mod1/wk3/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
+/Users/joannalin/.rvm/rubies/ruby-2.6.1/bin/ruby -I /Users/joannalin/.rvm/rubies/ruby-2.6.1/lib/ruby/site_ruby/2.6.0 -r ./siteconf20200415-33600-l6che6.rb extconf.rb
 checking for sqlite3.h... yes
 checking for pthread_create() in -lpthread... yes
 checking for -ldl... yes
@@ -17,10 +17,10 @@ checking for sqlite3_int64 in sqlite3.h... yes
 checking for sqlite3_uint64 in sqlite3.h... yes
 creating Makefile
 
-current directory: /Users/samgorick/Documents/Flatiron School/1 Ruby/3rd week/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
+current directory: /Users/joannalin/Flatiron/code/mod1/wk3/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
 make "DESTDIR=" clean
 
-current directory: /Users/samgorick/Documents/Flatiron School/1 Ruby/3rd week/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
+current directory: /Users/joannalin/Flatiron/code/mod1/wk3/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
 make "DESTDIR="
 compiling aggregator.c
 compiling backup.c
@@ -58,6 +58,6 @@ compiling sqlite3.c
 compiling statement.c
 linking shared-object sqlite3/sqlite3_native.bundle
 
-current directory: /Users/samgorick/Documents/Flatiron School/1 Ruby/3rd week/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
+current directory: /Users/joannalin/Flatiron/code/mod1/wk3/get-cocktails/vendor/cache/ruby/2.6.0/gems/sqlite3-1.4.2/ext/sqlite3
 make "DESTDIR=" install
-/usr/local/opt/coreutils/bin/ginstall -c -m 0755 sqlite3_native.bundle ./.gem.20200415-55686-14eq7gi/sqlite3
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 sqlite3_native.bundle ./.gem.20200415-33600-12lfpii/sqlite3

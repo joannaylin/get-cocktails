@@ -1,8 +1,8 @@
 require_relative '../config/environment'
 
 def welcome
-  # font = TTY::Font.new(:doom)
-  # puts font.write("The Bubbly App")
+  font = TTY::Font.new(:doom)
+  puts font.write("The Bubbly App")
   puts "What is your name?"
   name = gets.chomp
   if User.where("name like ?", "%#{name}%").first
