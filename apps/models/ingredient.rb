@@ -21,17 +21,12 @@ class Ingredient < ActiveRecord::Base
       five_drinks << drink_names.sample
     end
     
-    hash1 = {}
+    array = []
      five_drinks.each do |drink_name|
-      drinks = Cocktail.internet_cocktails(drink_name)
-      
-      drinks.each do |name, ingredients|
-        hash1[name] = ingredients
-      end
-    
+      drinks = Cocktail.internet_cocktails(drink_name).first
+      array << drinks
     end
-    hash1
-   
+    array 
   end
  
   def print_cocktail_names

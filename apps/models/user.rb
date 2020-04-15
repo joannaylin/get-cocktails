@@ -8,25 +8,27 @@ class User < ActiveRecord::Base
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
   
     if found_cocktail_list
-      found_cocktail_list.each do |name, ingredients|
-        puts "name: #{name}"
-        puts "ingredients: #{ingredients.join(", ")}"
+      found_cocktail_list.each do |drink|
+        puts "Name: #{drink[:name]}"
+        puts "Ingredients: #{drink[:ingredients].join(", ")}"
+        puts "Instructions: #{drink[:instructions]}"
       end
     else
       puts "Sorry, that search term doesn't match anything in the database."
     end
     puts "Type in the name of the cocktail you want to save into your favorites:"
-    cocktail = gets.chomp
-    if found_cocktail_list.include? cocktail
-      drink = Cocktail.create(name: cocktail)
-      ingredients = found_cocktail_list[cocktail]
-      ingredients.each do |ingredient|
-        one = Ingredient.create(name: ingredient)
-        drink.ingredients << one
+    favorite_cocktail = gets.chomp
+    found_cocktail_list.each do |cocktail|
+      if cocktail[:name] == favorite_cocktail
+        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+        ingredients = cocktail[:ingredients]
+        ingredients.each do |ingredient|
+          one = Ingredient.create(name: ingredient)
+          drink.ingredients << one
+        end
+        self.cocktails << drink
+        puts "#{drink.name} has been added to your favorites."
       end
-      self.cocktails << drink
-    else
-      puts "Input not recognised."
     end
   end
 
@@ -36,25 +38,27 @@ class User < ActiveRecord::Base
     found_ingredient = Ingredient.internet_search_cocktails(ingredient)
   
     if found_ingredient
-      found_ingredient.each do |name, ingredients|
-        puts "name: #{name}"
-        puts "ingredients: #{ingredients.join(", ")}"
+      found_ingredient.each do |drink|
+        puts "Name: #{drink[:name]}"
+        puts "Ingredients: #{drink[:ingredients].join(", ")}"
+        puts "Instructions: #{drink[:instructions]}"
       end
     else
       puts "Sorry, that ingredient could not be found."
     end
     puts "Type in the name of the cocktail you want to save into your favorites:"
-    cocktail = gets.chomp
-    if found_ingredient.include? cocktail
-      drink = Cocktail.create(name: cocktail)
-      ingredients = found_ingredient[cocktail]
-      ingredients.each do |ingredient|
-        one = Ingredient.create(name: ingredient)
-        drink.ingredients << one
+    favorite_cocktail = gets.chomp
+    found_ingredient.each do |cocktail|
+      if cocktail[:name] == favorite_cocktail
+        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+        ingredients = cocktail[:ingredients]
+        ingredients.each do |ingredient|
+          one = Ingredient.create(name: ingredient)
+          drink.ingredients << one
+        end
+        self.cocktails << drink
+        puts "#{drink.name} has been added to your favorites."
       end
-      self.cocktails << drink
-    else
-      puts "Input not recognised."
     end
   end
 

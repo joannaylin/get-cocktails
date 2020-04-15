@@ -21,10 +21,12 @@ class Cocktail < ActiveRecord::Base
     response = Net::HTTP.get_response(uri)
     body = response.body
     cocktails = JSON.parse(body)
-    hash = {}
     
+    array = []
     cocktails["drinks"].each do |drink|
+      hash = {}
       drink_name = drink["strDrink"]
+      drink_instructions = drink["strInstructions"]
       drink_ingredients = []
       ingredient_string = "strIngredient1"
       i = 1
@@ -33,13 +35,13 @@ class Cocktail < ActiveRecord::Base
           i += 1
           ingredient_string = "strIngredient" + i.to_s
         end
-      hash[drink_name] = drink_ingredients
+      hash[:name] = drink_name
+      hash[:ingredients] = drink_ingredients
+      hash[:instructions] = drink_instructions
+      array << hash
     end
-
-    hash
-
+    array
   end
-
 
   def print_ingredient_names
     self.ingredients.map { |ingredient| ingredient.name }
