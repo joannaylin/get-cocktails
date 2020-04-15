@@ -1,6 +1,6 @@
 require_relative '../config/environment'
 
-def search
+def search_cocktails
   puts "Let's search for a cocktail. Enter a cocktail you want to see:"
   cocktail = gets.chomp
   found_cocktail_list = Cocktail.internet_cocktails(cocktail)
@@ -13,6 +13,7 @@ def search
   else
     puts "Sorry, that search term doesn't match anything in the database."
   end
+  found_cocktail_list
 end
 
 def search_ingredients
@@ -28,7 +29,7 @@ def search_ingredients
   else
     puts "Sorry, that ingredient could not be found."
   end
-
+  found_ingredient
 end
 
 
@@ -64,7 +65,7 @@ def choice(user)
   input = gets.chomp
   case input.to_i
   when 1
-    search
+    search_cocktails
     choice(user)
   when 2
     search_ingredients
@@ -76,7 +77,8 @@ def choice(user)
     user.add_new_favorite
     choice(user)
   when 5
-    update_rating # Put this into users please :)
+    user.update_rating
+    choice(user)
   when 6
     user.delete_favorite
     choice(user)
