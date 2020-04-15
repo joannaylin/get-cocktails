@@ -41,4 +41,24 @@ class User < ActiveRecord::Base
     self.print_saved_cocktails
   end
 
+  def update_rating
+    puts "Let's update the rating for one of your favorite drinks! Enter the drink you want to update:"
+    cocktail = gets.chomp
+    found_cocktail = self.cocktails.find_by(name: cocktail.capitalize)
+    if found_cocktail 
+      puts "What rating would you give #{found_cocktail.name.downcase} on a scale of 1-10? 1 being the worst, and 10 being the best."
+      updated_rating = gets.chomp
+      # below line will update--> but it will also update if you have it in your favorites as well. buggy. need to fix.
+      found_cocktail.user_cocktails.update(rating: updated_rating.to_i)
+      puts "Thanks! Your rating has now been updated."
+      # trying to get it to print a result back to the user so that they can visually see the update, but no dice. need to fix.
+    else
+      puts "Sorry, that drink could not be found in your favorites list."
+    end
+  end
+
+  def leave
+    puts "Thanks for using the cocktail app #{self.name}. See you soon."
+  end
+
 end
