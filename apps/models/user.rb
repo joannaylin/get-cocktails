@@ -16,20 +16,8 @@ class User < ActiveRecord::Base
     else
       puts "Sorry, that search term doesn't match anything in the database."
     end
-    puts "Type in the name of the cocktail you want to save into your favorites:"
-    favorite_cocktail = gets.chomp
-    found_cocktail_list.each do |cocktail|
-      if cocktail[:name] == favorite_cocktail
-        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
-        ingredients = cocktail[:ingredients]
-        ingredients.each do |ingredient|
-          one = Ingredient.create(name: ingredient)
-          drink.ingredients << one
-        end
-        self.cocktails << drink
-        puts "#{drink.name} has been added to your favorites."
-      end
-    end
+
+    self.add_favorite(found_cocktail_list)
   end
 
   def search_ingredients
@@ -46,21 +34,49 @@ class User < ActiveRecord::Base
     else
       puts "Sorry, that ingredient could not be found."
     end
-    puts "Type in the name of the cocktail you want to save into your favorites:"
-    favorite_cocktail = gets.chomp
-    found_ingredient.each do |cocktail|
-      if cocktail[:name] == favorite_cocktail
-        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+
+    self.add_favorite(found_ingredient)
+  end
+
+  def add_favorite(search_results)
+    if search_results.length == 1
+      puts "Do you want to add this cocktail your favorites? (Y/N)"
+      answer = gets.chomp
+      if answer == "Y"
+      search_results.each do |cocktail|
+        drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
         ingredients = cocktail[:ingredients]
         ingredients.each do |ingredient|
-          one = Ingredient.create(name: ingredient)
+          one = Ingredient.find_or_create_by(name: ingredient)
           drink.ingredients << one
-        end
+          end
         self.cocktails << drink
         puts "#{drink.name} has been added to your favorites."
+        end
+      end
+    elsif search_results.length > 1
+      puts "Do you want to add one of these cocktails to your favorites? (Y/N)"
+      answer = gets.chomp
+      if answer == "Y"
+        puts "Type in the name of the cocktail you want to save into your favorites:"
+        favorite_cocktail = gets.chomp
+        search_results.each do |cocktail|
+          if cocktail[:name] == favorite_cocktail
+            drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
+            ingredients = cocktail[:ingredients]
+            ingredients.each do |ingredient|
+              one = Ingredient.find_or_create_by(name: ingredient)
+              drink.ingredients << one
+            end
+            self.cocktails << drink
+            puts "#{drink.name} has been added to your favorites."
+          end
+        end
       end
     end
   end
+
+  
 
   def print_saved_cocktails
     self.cocktails.each_with_index do |cocktail, index|
