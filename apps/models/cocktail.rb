@@ -16,30 +16,35 @@ class Cocktail < ActiveRecord::Base
   def self.internet_cocktails(search_term)
   
     search_for_url = search_term.gsub(' ', '_')
-
     url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{search_for_url}"
-
     uri = URI.parse(url)
-
     response = Net::HTTP.get_response(uri)
-
     body = response.body
-
     cocktails = JSON.parse(body)
-    if cocktails["drinks"]
-      cocktail_names = cocktails["drinks"].map do |cocktail_info|
-        my_name = cocktail_info["strDrink"]
-      end
-      # cocktail_hash = { name: my_name }
-      # Cocktail.new(cocktail_hash)
-    end
-  end
+    hash = {}
     
-    # Cocktail.all.map { |cocktail| puts cocktail.name }
+    cocktails["drinks"].each do |drink|
+      drink_name = drink["strDrink"]
+      drink_ingredients = []
+      ingredient_string = "strIngredient1"
+      i = 1
+        while drink[ingredient_string]
+          drink_ingredients << drink[ingredient_string]
+          i += 1
+          ingredient_string = "strIngredient" + i.to_s
+        end
+      hash[drink_name] = drink_ingredients
+    end
+
+    hash
+
+  end
+
 
   def print_ingredient_names
     self.ingredients.map { |ingredient| ingredient.name }
   end
+
 
 
 

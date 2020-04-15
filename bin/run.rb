@@ -6,15 +6,9 @@ def search
   found_cocktail_list = Cocktail.internet_cocktails(cocktail)
 
   if found_cocktail_list
-    if found_cocktail_list.length == 1
-      puts "We have found one cocktail that matches your search!"
-      puts "Name: #{found_cocktail_list.first}"
-      # puts "Ingredients: #{found_cocktail.first.print_ingredient_names.join(", ")}"
-    elsif found_cocktail_list.length > 1
-        puts "We have found #{found_cocktail_list.length} cocktails that match your search!"
-        found_cocktail_list.each_with_index do |cocktail, index|
-          puts "#{index +1}. #{cocktail}"
-      end
+    found_cocktail_list.each do |name, ingredients|
+      puts "name: #{name}"
+      puts "ingredients: #{ingredients.join(", ")}"
     end
   else
     puts "Sorry, that search term doesn't match anything in the database."
@@ -24,11 +18,13 @@ end
 def search_ingredients
   puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
   ingredient = gets.chomp
-  found_ingredient = Ingredient.search_cocktails(ingredient)
+  found_ingredient = Ingredient.internet_search_cocktails(ingredient)
 
   if found_ingredient
-    puts "The following drinks contain ingredient, #{ingredient}:"
-    found_ingredient.first.print_cocktail_names
+    found_ingredient.each do |name, ingredients|
+      puts "name: #{name}"
+      puts "ingredients: #{ingredients.join(", ")}"
+    end
   else
     puts "Sorry, that ingredient could not be found."
   end
