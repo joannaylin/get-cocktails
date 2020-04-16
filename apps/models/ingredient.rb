@@ -38,9 +38,7 @@ class Ingredient < ActiveRecord::Base
         option_one = ingredient_count.sort_by{|ingredient, number| number}.reverse[1]
         option_two = ingredient_count.sort_by{|ingredient, number| number}.reverse[2]
         option_three = ingredient_count.sort_by{|ingredient, number| number}.reverse[3]
-        puts ""
-        puts "- - - - - - - - - - - - -"
-        puts ""
+        space
         puts "Your search returned #{array.length} results! Why not add another ingredient?"
         puts "**********"
         puts "#{option_one[0]} would return #{option_one[1]} results"
@@ -48,13 +46,9 @@ class Ingredient < ActiveRecord::Base
         puts "#{option_two[0]} would return #{option_two[1]} results"
         puts "**********"
         puts "#{option_three[0]} would return #{option_three[1]} results"
-        puts ""
-        puts "- - - - - - - - - - - - -"
-        puts ""
+        space
         puts "********** Enter additional search term: **********"
-        puts ""
-        puts "- - - - - - - - - - - - -"
-        puts ""
+        space
         additional_ingredient = gets.chomp
         new_arr = array.select do |cocktail|
           cocktail[:ingredients].include? additional_ingredient
