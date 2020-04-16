@@ -26,9 +26,7 @@ class User < ActiveRecord::Base
       self.print_search_results(found_ingredient)
       self.add_favorite(found_ingredient)
     else
-      puts ""
-      puts "- - - - - - - - - - - - -"
-      puts ""
+      space
       puts "Sorry, that ingredient could not be found."
     end
 
@@ -48,25 +46,27 @@ class User < ActiveRecord::Base
 
   def add_favorite(search_results)
     if search_results.length == 1
-      puts ""
-      puts "- - - - - - - - - - - "
-      puts ""
-      puts "Do you want to add this cocktail your favorites? (Y/N)"
-      answer = gets.chomp
-      if answer == "Y"
+      space
+      prompt = TTY::Prompt.new
+      answer = prompt.select("Do you want to add one of these cocktails to your favorites?") do |menu|
+        menu.enum '.'
+        menu.choice 'Yes', 1
+        menu.choice 'No', 2
+      end
+      if answer == 1
         save_favorite(search_results)
       end
 
     elsif search_results.length > 1
-      puts ""
-      puts "- - - - - - - - - - - - -"
-      puts ""
-      puts "Do you want to add one of these cocktails to your favorites? (Y/N)"
-      answer = gets.chomp
-      if answer == "Y"
-        puts ""
-        puts "- - - - - - - - - - - - -"
-        puts ""
+      space
+      prompt = TTY::Prompt.new
+      answer = prompt.select("Do you want to add one of these cocktails to your favorites?") do |menu|
+        menu.enum '.'
+        menu.choice 'Yes', 1
+        menu.choice 'No', 2
+      end
+      if answer == 1
+        space
         puts "Which cocktail do you want to add?"
         favorite = gets.chomp
         save_multi_favorite(search_results, favorite)
@@ -83,15 +83,11 @@ class User < ActiveRecord::Base
         drink.ingredients << one
         end
         if self.cocktails.include? drink
-          puts ""
-          puts "- - - - - - - - - - - - -"
-          puts ""
+          space
           puts "You've already added this drink to your favorites."
         else
           self.cocktails << drink
-          puts ""
-          puts "- - - - - - - - - - - - -"
-          puts ""
+          space
           puts "#{drink.name} has been added to your favorites."
         end
     end
@@ -107,15 +103,11 @@ class User < ActiveRecord::Base
           drink.ingredients << item
           end
           if self.cocktails.include? drink
-            puts ""
-            puts "- - - - - - - - - - - - -"
-            puts ""
+            space
             puts "You've already added this drink to your favorites."
           else
             self.cocktails << drink
-            puts ""
-            puts "- - - - - - - - - - - - -"
-            puts ""
+            space
             puts "#{drink.name} has been added to your favorites."
           end
       end
@@ -123,9 +115,7 @@ class User < ActiveRecord::Base
   end
 
   def retrieve_user_favorites
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Your saved cocktails are:"
     self.print_saved_cocktails
   end
@@ -146,9 +136,7 @@ class User < ActiveRecord::Base
 
   def delete_favorite
     retrieve_user_favorites
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Enter the name of the cocktail that you want to remove:"
     cocktail_to_delete = gets.chomp
     if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first

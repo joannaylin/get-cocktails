@@ -4,7 +4,6 @@ class Cocktail < ActiveRecord::Base
   has_many :user_cocktails
   has_many :users, through: :user_cocktails
 
-  # List all the cocktails stored within the app
   def self.retrieve_cocktail_names
     self.all.map { |cocktail| cocktail.name }
   end
@@ -14,7 +13,6 @@ class Cocktail < ActiveRecord::Base
   end
 
   def self.internet_cocktails(search_term)
-  
     search_for_url = search_term.gsub(' ', '_')
     url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{search_for_url}"
     uri = URI.parse(url)
