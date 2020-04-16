@@ -33,14 +33,12 @@ class User < ActiveRecord::Base
       puts "Sorry, that ingredient could not be found."
     end
 
-    puts "Type in the name of the cocktail you want to save into your favorites:"
-    favorite_cocktail = gets.chomp
-    found_ingredient.each do |cocktail|
-      if cocktail[:name] == favorite_cocktail
-        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
-        self.add_favorite(found_ingredient)
-      end
-    end
+    # puts "Type in the name of the cocktail you want to save into your favorites:"
+    # favorite_cocktail = gets.chomp
+    # found_ingredient.each do |cocktail|
+    #   if cocktail[:name] == favorite_cocktail
+    #     drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+    self.add_favorite(found_ingredient)
   end
 
   def print_search_results(search_results)
@@ -140,12 +138,14 @@ class User < ActiveRecord::Base
 
   def print_saved_cocktails
     self.cocktails.each_with_index do |cocktail, index|
-    ingredients = cocktail.ingredients.map {|ingredient| ingredient.name}.join(", ")
-    drink = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
-    rating = drink.first.rating
+    # ingredients = cocktail.ingredients.map {|ingredient| ingredient.name}.join(", ")
+    mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
+    rating = mine.first.rating
     puts ""
     puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-    puts "Ingredients: #{ingredients}"
+    puts "Ingredients: "
+    binding.pry
+      cocktail.ingredients.each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
     puts "Instructions: #{cocktail.instructions}"
     puts ""
     puts "******************"
