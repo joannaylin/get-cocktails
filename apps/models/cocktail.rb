@@ -27,13 +27,16 @@ class Cocktail < ActiveRecord::Base
       hash = {}
       drink_name = drink["strDrink"]
       drink_instructions = drink["strInstructions"]
-      drink_ingredients = []
+      drink_ingredients = {}
       ingredient_string = "strIngredient1"
+      measure_string = "strMeasure1"
       i = 1
         while drink[ingredient_string]
-          drink_ingredients << drink[ingredient_string]
+          ingredient = drink[ingredient_string]
+          drink_ingredients[ingredient] = drink[measure_string]
           i += 1
           ingredient_string = "strIngredient" + i.to_s
+          measure_string = "strMeasure" + i.to_s
         end
       hash[:name] = drink_name
       hash[:ingredients] = drink_ingredients

@@ -3,9 +3,7 @@ class User < ActiveRecord::Base
   has_many :cocktails, through: :user_cocktails
 
   def search_cocktails
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Let's search for a cocktail. Enter a cocktail you want to see:"
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
@@ -13,38 +11,17 @@ class User < ActiveRecord::Base
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
     else
-      puts "Sorry, that cocktail doesn't match anything in the database."
-    end
-
-    puts "Type in the name of the cocktail you want to save into your favorites:"
-    favorite_cocktail = gets.chomp
-    found_cocktail_list.each do |cocktail|
-      if cocktail[:name] == favorite_cocktail
-        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
-        ingredients = cocktail[:ingredients]
-        ingredients.each do |ingredient|
-          one = Ingredient.create(name: ingredient)
-          drink.ingredients << one
-        end
-        self.cocktails << drink
-        puts "#{drink.name} has been added to your favorites."
-      end
-      puts ""
-      puts "- - - - - - - - - - - - -"
-      puts ""
+      space
       puts "Sorry, that cocktail could not be found."
     end
-
     self.add_favorite(found_cocktail_list)
   end
 
   def search_ingredients
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
     ingredient = gets.chomp
-    found_ingredient = Ingredient.internet_search_cocktails(ingredient)
+    found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
   
     if found_ingredient
       self.print_search_results(found_ingredient)
@@ -68,7 +45,8 @@ class User < ActiveRecord::Base
   def print_search_results(search_results)
     search_results.each do |drink|
       puts "Name: #{drink[:name]}"
-      puts "Ingredients: #{drink[:ingredients].join(", ")}"
+      puts "Ingredients:"
+      drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
       puts "Instructions: #{drink[:instructions]}"
       puts ""
       puts "*************"
@@ -175,12 +153,16 @@ class User < ActiveRecord::Base
   
   def delete_favorite
     retrieve_user_favorites
+    puts ""
+    puts "- - - - - - - - - - - - -"
+    puts ""
     puts "Enter the name of the cocktail that you want to remove:"
     cocktail_to_delete = gets.chomp
-    found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
-    self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
-    puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
-    self.print_saved_cocktails
+    if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
+      self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
+      puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
+      self.print_saved_cocktails
+    end
   end
 
   def update_rating
