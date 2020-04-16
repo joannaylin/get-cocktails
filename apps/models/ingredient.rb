@@ -11,22 +11,22 @@ class Ingredient < ActiveRecord::Base
     response = Net::HTTP.get_response(uri)
     body = response.body
 
-    spinner = TTY::Spinner.new("[:spinner] Loading ...")
-    spinner.auto_spin
-
     if body.length > 0
       cocktails = JSON.parse(body)
       drink_ids = cocktails["drinks"].map do |drink|
         drink["idDrink"]
       end
     
+      spinner = TTY::Spinner.new("[:spinner] Loading ...")
+      spinner.auto_spin
+
       array = []
       drink_ids.each do |drink_name|
         drinks = Ingredient.test_id_cocktails(drink_name).first
         array << drinks
       end
 
-    spinner.stop("Done!")
+      spinner.stop("Done!")
 
       if array.length > 5
         ingredient_count = Hash.new(0)
@@ -93,8 +93,7 @@ class Ingredient < ActiveRecord::Base
       hash[:ingredients] = drink_ingredients
       hash[:instructions] = drink_instructions
       array << hash
-    end
+      end
     array
   end
-
 end

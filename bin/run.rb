@@ -41,7 +41,7 @@ def main_menu(user)
       user.search_ingredients
       main_menu(user)
     when 3
-      user.retrieve_user_favorites
+      user.print_saved_cocktails
       main_menu(user)
     when 4
       user.update_rating

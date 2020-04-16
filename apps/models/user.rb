@@ -29,8 +29,6 @@ class User < ActiveRecord::Base
       space
       puts "Sorry, that ingredient could not be found."
     end
-
-    self.add_favorite(found_ingredient)
   end
 
   def print_search_results(search_results)
@@ -114,57 +112,67 @@ class User < ActiveRecord::Base
     end
   end
 
-  def retrieve_user_favorites
-    space
-    puts "Your saved cocktails are:"
-    self.print_saved_cocktails
-  end
-
   def print_saved_cocktails
-    self.cocktails.each_with_index do |cocktail, index|
-    mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
-    rating = mine.first.rating
-    puts ""
-    puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-    puts "Ingredients:"
-      cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
-    puts "Instructions: #{cocktail.instructions}"
-    puts ""
-    puts "******************"
+    if self.cocktails.length > 0
+      space
+      puts "Your saved cocktails are:"
+      self.cocktails.each_with_index do |cocktail, index|
+      mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
+      rating = mine.first.rating
+      puts ""
+      puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
+      puts "Ingredients:"
+        cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
+      puts "Instructions: #{cocktail.instructions}"
+      puts ""
+      puts "******************"
+      end
+    else
+      space
+      puts "You have no saved cocktails to display, #{self.name}."
     end
   end
 
   def delete_favorite
-    retrieve_user_favorites
-    space
-    puts "Enter the name of the cocktail that you want to remove:"
-    cocktail_to_delete = gets.chomp
-    if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
-      self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
-      puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
+    if self.cocktails.length > 0
+      space
+      self.print_saved_cocktails
+      space
+      puts "Enter the name of the cocktail that you want to remove:"
+      cocktail_to_delete = gets.chomp
+      if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
+        self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
+        puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
+        self.print_saved_cocktails
+      end
+    else
       self.print_saved_cocktails
     end
   end
 
   def update_rating
-    puts "Let's update the rating of one of your drinks!"
-    puts "Your current favorites are: "
-    self.print_saved_cocktails
-    puts ""
-    puts "What drink would you like to update?"
-    cocktail = gets.chomp
-    found_cocktail = self.cocktails.find_by(name: cocktail)
-    if found_cocktail 
-      puts ""
-      puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
-      updated_rating = gets.chomp
-      cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
-      cocktail.update(rating: updated_rating)
-      puts ""
-      puts "Thanks! Your updated favorites are: "
+    if self.cocktails.length > 0
+      puts "Let's update the rating of one of your drinks!"
+      puts "Your current favorites are: "
       self.print_saved_cocktails
+      puts ""
+      puts "What drink would you like to update?"
+      cocktail = gets.chomp
+      found_cocktail = self.cocktails.find_by(name: cocktail)
+      if found_cocktail 
+        puts ""
+        puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
+        updated_rating = gets.chomp
+        cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
+        cocktail.update(rating: updated_rating)
+        puts ""
+        puts "Thanks! Your updated favorites are: "
+        self.print_saved_cocktails
+      else
+        puts "Sorry, that drink could not be found in your favorites list."
+      end
     else
-      puts "Sorry, that drink could not be found in your favorites list."
+      self.print_saved_cocktails
     end
   end
 
