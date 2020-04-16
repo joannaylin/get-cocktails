@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
     if search_results.length == 1
       space
       prompt = TTY::Prompt.new
-      answer = prompt.select("Do you want to add one of these cocktails to your favorites?") do |menu|
+      answer = prompt.select("Do you want to add this cocktail to your favorites?") do |menu|
         menu.enum '.'
         menu.choice 'Yes', 1
         menu.choice 'No', 2
@@ -65,9 +65,10 @@ class User < ActiveRecord::Base
       end
       if answer == 1
         space
-        puts "Which cocktail do you want to add?"
-        favorite = gets.chomp
-        save_multi_favorite(search_results, favorite)
+        names = search_results.map { |cocktail| cocktail[:name] }
+        prompt = TTY::Prompt.new
+        input = prompt.select("Which cocktail do you want to add?", names)
+        save_multi_favorite(search_results, input)
       end
     end
   end
@@ -178,6 +179,12 @@ class User < ActiveRecord::Base
 
   def leave
     puts "Thanks for using the Cocktail app #{self.name}. See you soon."
+  end
+
+  def test
+    array = ["one", "two", "three", "four"]
+    prompt = TTY::Prompt.new
+    input = prompt.select("Which cocktail do you want to add?", array)
   end
 
 end

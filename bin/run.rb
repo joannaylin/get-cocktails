@@ -15,8 +15,8 @@ def welcome
     else
       user = User.create(name: name)
     end
-    puts "Welcome to the Cocktail app, #{user.name}."
-    user
+      puts "Welcome to the Cocktail App, #{user.name}."
+      user
   else
     puts "This name isn't valid. Please try again:"
     welcome
