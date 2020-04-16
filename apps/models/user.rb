@@ -4,10 +4,10 @@ class User < ActiveRecord::Base
 
   def search_cocktails
     space
-    puts "Let's search for a cocktail. Enter a cocktail you want to see:"
+    puts "Let's search for a cocktail. Enter the cocktail you want to see:"
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
-    
+
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
     else
@@ -32,11 +32,6 @@ class User < ActiveRecord::Base
       puts "Sorry, that ingredient could not be found."
     end
 
-    # puts "Type in the name of the cocktail you want to save into your favorites:"
-    # favorite_cocktail = gets.chomp
-    # found_ingredient.each do |cocktail|
-    #   if cocktail[:name] == favorite_cocktail
-    #     drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
     self.add_favorite(found_ingredient)
   end
 
@@ -143,7 +138,6 @@ class User < ActiveRecord::Base
     puts ""
     puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
     puts "Ingredients: "
-    binding.pry
       cocktail.ingredients.each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
     puts "Instructions: #{cocktail.instructions}"
     puts ""

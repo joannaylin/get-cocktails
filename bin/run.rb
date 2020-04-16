@@ -65,9 +65,11 @@ def choice(user)
   end
 end
 
+
 def run
-user = welcome
-choice(user)
+  prompt = TTY::Prompt.new
+  user = welcome
+  choice(user)
 end
 
 run
