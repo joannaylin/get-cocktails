@@ -10,35 +10,27 @@ class User < ActiveRecord::Base
   
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
+      self.add_favorite(found_cocktail_list)
     else
       space
       puts "Sorry, that cocktail could not be found."
     end
-    self.add_favorite(found_cocktail_list)
   end
 
   def search_ingredients
     space
     puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
     ingredient = gets.chomp
-    found_ingredient = Ingredient.internet_search_cocktails(ingredient)
-    # found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
-  
+    found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
     if found_ingredient
       self.print_search_results(found_ingredient)
+      self.add_favorite(found_ingredient)
     else
       puts ""
       puts "- - - - - - - - - - - - -"
       puts ""
       puts "Sorry, that ingredient could not be found."
     end
-
-    # puts "Type in the name of the cocktail you want to save into your favorites:"
-    # favorite_cocktail = gets.chomp
-    # found_ingredient.each do |cocktail|
-    #   if cocktail[:name] == favorite_cocktail
-    #     drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
-    self.add_favorite(found_ingredient)
   end
 
   def print_search_results(search_results)
