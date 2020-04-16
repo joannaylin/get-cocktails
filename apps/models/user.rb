@@ -139,10 +139,13 @@ class User < ActiveRecord::Base
       space
       self.print_saved_cocktails
       space
-      puts "Enter the name of the cocktail that you want to remove:"
-      cocktail_to_delete = gets.chomp
+      names = self.cocktails.map { |cocktail| cocktail[:name] }
+      prompt = TTY::Prompt.new
+      cocktail_to_delete = prompt.select("Which cocktail do you want to remove?", names)
+
       if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
         self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
+        space
         puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
         self.print_saved_cocktails
       end
@@ -153,21 +156,22 @@ class User < ActiveRecord::Base
 
   def update_rating
     if self.cocktails.length > 0
+      space
       puts "Let's update the rating of one of your drinks!"
-      puts "Your current favorites are: "
+      puts "Your current favorites are:"
+      space
       self.print_saved_cocktails
-      puts ""
-      puts "What drink would you like to update?"
-      cocktail = gets.chomp
-      found_cocktail = self.cocktails.find_by(name: cocktail)
+      space
+      names = self.cocktails.map { |cocktail| cocktail[:name] }
+      prompt = TTY::Prompt.new
+      cocktail_to_update = prompt.select("What drink would you like to update?", names)
+      found_cocktail = self.cocktails.find_by(name: cocktail_to_update)
       if found_cocktail 
-        puts ""
-        puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
-        updated_rating = gets.chomp
+        space
+        prompt = TTY::Prompt.new
+        updated_rating = prompt.select("What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best.", (1..10).to_a)
         cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
         cocktail.update(rating: updated_rating)
-        puts ""
-        puts "Thanks! Your updated favorites are: "
         self.print_saved_cocktails
       else
         puts "Sorry, that drink could not be found in your favorites list."
@@ -179,12 +183,6 @@ class User < ActiveRecord::Base
 
   def leave
     puts "Thanks for using the Cocktail app #{self.name}. See you soon."
-  end
-
-  def test
-    array = ["one", "two", "three", "four"]
-    prompt = TTY::Prompt.new
-    input = prompt.select("Which cocktail do you want to add?", array)
   end
 
 end
