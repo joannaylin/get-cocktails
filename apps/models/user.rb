@@ -35,9 +35,13 @@ class User < ActiveRecord::Base
 
   def print_search_results(search_results)
     search_results.each do |drink|
-      puts "Name: #{drink[:name]}"
+      pastel = Pastel.new
+      puts ""
+      puts pastel.cyan.bold("Name: #{drink[:name]}")
+      puts ""
       puts "Ingredients:"
       drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
+      puts ""
       puts "Instructions: #{drink[:instructions]}"
       puts ""
       puts "*************"
@@ -116,7 +120,8 @@ class User < ActiveRecord::Base
 
   def retrieve_user_favorites
     space
-    puts "Your saved cocktails are:"
+    pastel = Pastel.new
+    puts pastel.italic.bold("Your saved cocktails are:")
     self.print_saved_cocktails
   end
 
@@ -125,10 +130,15 @@ class User < ActiveRecord::Base
     mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
     rating = mine.first.rating
     puts ""
-    puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-    puts "Ingredients:"
-      cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
-    puts "Instructions: #{cocktail.instructions}"
+    pastel = Pastel.new
+    name = pastel.cyan.underline("#{index +1}. #{cocktail.name}")
+    puts "#{name} -- rating: #{rating}"
+    puts ""
+    puts "Ingredients: "
+      cocktail.ingredients.each { |ingredient| puts " #{ingredient.name}: #{ingredient.measure}"}
+    puts ""
+    puts "Instructions:"
+    puts "#{cocktail.instructions}"
     puts ""
     puts "******************"
     end
@@ -141,14 +151,16 @@ class User < ActiveRecord::Base
     cocktail_to_delete = gets.chomp
     if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
       self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
-      puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
+      pastel = Pastel.new
+      puts pastel.italic.bold("#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:")
       self.print_saved_cocktails
     end
   end
 
   def update_rating
     puts "Let's update the rating of one of your drinks!"
-    puts "Your current favorites are: "
+    pastel = Pastel.new
+    puts pastel.italic.bold("Your current favorites are: ")
     self.print_saved_cocktails
     puts ""
     puts "What drink would you like to update?"
@@ -161,7 +173,8 @@ class User < ActiveRecord::Base
       cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
       puts ""
-      puts "Thanks! Your updated favorites are: "
+      pastel = Pastel.new
+      puts pastel.italic.bold("Thanks! Your updated favorites are: ")
       self.print_saved_cocktails
     else
       puts "Sorry, that drink could not be found in your favorites list."
@@ -169,7 +182,8 @@ class User < ActiveRecord::Base
   end
 
   def leave
-    puts "Thanks for using the Cocktail app #{self.name}. See you soon."
+    pastel = Pastel.new
+    puts pastel.italic.bold.cyan("Thanks for using the Cocktail app #{self.name}. See you soon.")
   end
 
 end

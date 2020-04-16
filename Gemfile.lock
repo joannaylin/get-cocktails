@@ -110,6 +110,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  pastel
   pry
   rake
   require_all
