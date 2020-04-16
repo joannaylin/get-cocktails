@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
     puts ""
     puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
     ingredient = gets.chomp
-    found_ingredient = Ingredient.internet_search_cocktails(ingredient)
+    found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
   
     if found_ingredient
       self.print_search_results(found_ingredient)
@@ -147,12 +147,16 @@ class User < ActiveRecord::Base
   
   def delete_favorite
     retrieve_user_favorites
+    puts ""
+    puts "- - - - - - - - - - - - -"
+    puts ""
     puts "Enter the name of the cocktail that you want to remove:"
     cocktail_to_delete = gets.chomp
-    found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
-    self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
-    puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
-    self.print_saved_cocktails
+    if found_cocktail = Cocktail.search_cocktails(cocktail_to_delete).first
+      self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == found_cocktail.name}
+      puts "#{found_cocktail.name} has been removed from your favorites. Your saved cocktails are now:"
+      self.print_saved_cocktails
+    end
   end
 
   def update_rating
