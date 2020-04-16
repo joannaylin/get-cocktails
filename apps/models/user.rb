@@ -66,7 +66,13 @@ class User < ActiveRecord::Base
 
   def print_saved_cocktails
     self.cocktails.each_with_index do |cocktail, index|
-    puts "#{index +1}. #{cocktail.name}"
+      drink = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
+      rating = drink.first.rating
+      puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
+
+        # drink = cocktail.user_cocktails.where(:id => self.id, :cocktail_id => cocktail.id)
+        # drink.first.rating
+
     end
   end
   
@@ -103,16 +109,19 @@ class User < ActiveRecord::Base
   end
 
   def update_rating
-    puts "Let's update the rating for one of your favorite drinks! Enter the drink you want to update:"
+    puts "Let's update the rating of one of your drinks!"
+    puts "Your current favorites are: "
+    self.print_saved_cocktails
+    puts "What drink would you like to update?"
     cocktail = gets.chomp
-    found_cocktail = self.cocktails.find_by(name: cocktail.capitalize)
+    found_cocktail = self.cocktails.find_by(name: cocktail)
     if found_cocktail 
-      puts "What rating would you give #{found_cocktail.name.downcase} on a scale of 1-10? 1 being the worst, and 10 being the best."
-      updated_rating = gets.chomp.to_i
-      # below line will update--> but it will also update if you have it in your favorites as well. buggy. need to fix.
-      cocktail = found_cocktail.user_cocktails.where(self.id == user_id)
+      puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
+      updated_rating = gets.chomp
+      cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
-      puts "Thanks! Your rating for #{found_cocktail.name.downcase} is now #{updated_rating}."
+      puts "Thanks! Your updated favorites are: "
+      self.print_saved_cocktails
     else
       puts "Sorry, that drink could not be found in your favorites list."
     end
