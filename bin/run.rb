@@ -16,7 +16,7 @@ def welcome
   else
     user = User.create(name: name)
   end
-  puts "Welcome to the cocktail app, #{user.name}."
+  puts "Welcome to the Cocktail app, #{user.name}."
   user
 end
 
@@ -60,7 +60,7 @@ def choice(user)
   when 6
     user.leave
   else
-    "Sorry, I don't recognise that option."
+    "Sorry, I don't recognize that option."
     choice(user)
   end
 end

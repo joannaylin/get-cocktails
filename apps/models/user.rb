@@ -32,7 +32,14 @@ class User < ActiveRecord::Base
       puts "Sorry, that ingredient could not be found."
     end
 
-    self.add_favorite(found_ingredient)
+    puts "Type in the name of the cocktail you want to save into your favorites:"
+    favorite_cocktail = gets.chomp
+    found_ingredient.each do |cocktail|
+      if cocktail[:name] == favorite_cocktail
+        drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+        self.add_favorite(found_ingredient)
+      end
+    end
   end
 
   def print_search_results(search_results)
@@ -41,6 +48,7 @@ class User < ActiveRecord::Base
       puts "Ingredients:"
       drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
       puts "Instructions: #{drink[:instructions]}"
+      puts ""
       puts "*************"
     end
   end
@@ -102,8 +110,8 @@ class User < ActiveRecord::Base
         drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
         ingredients = cocktail[:ingredients]
         ingredients.each do |ingredient|
-          one = Ingredient.find_or_create_by(name: ingredient)
-          drink.ingredients << one
+          item = Ingredient.find_or_create_by(name: ingredient)
+          drink.ingredients << item
           end
           if self.cocktails.include? drink
             puts ""
@@ -132,9 +140,13 @@ class User < ActiveRecord::Base
   def print_saved_cocktails
     self.cocktails.each_with_index do |cocktail, index|
     ingredients = cocktail.ingredients.map {|ingredient| ingredient.name}.join(", ")
-    puts "#{index +1}. #{cocktail.name}"
+    drink = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
+    rating = drink.first.rating
+    puts ""
+    puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
     puts "Ingredients: #{ingredients}"
     puts "Instructions: #{cocktail.instructions}"
+    puts ""
     puts "******************"
     end
   end
@@ -154,23 +166,29 @@ class User < ActiveRecord::Base
   end
 
   def update_rating
-    puts "Let's update the rating for one of your favorite drinks! Enter the drink you want to update:"
+    puts "Let's update the rating of one of your drinks!"
+    puts "Your current favorites are: "
+    self.print_saved_cocktails
+    puts ""
+    puts "What drink would you like to update?"
     cocktail = gets.chomp
-    found_cocktail = self.cocktails.find_by(name: cocktail.capitalize)
+    found_cocktail = self.cocktails.find_by(name: cocktail)
     if found_cocktail 
-      puts "What rating would you give #{found_cocktail.name.downcase} on a scale of 1-10? 1 being the worst, and 10 being the best."
-      updated_rating = gets.chomp.to_i
-      # below line will update--> but it will also update if you have it in your favorites as well. buggy. need to fix.
-      cocktail = found_cocktail.user_cocktails.where(self.id == user_id)
+      puts ""
+      puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
+      updated_rating = gets.chomp
+      cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
-      puts "Thanks! Your rating for #{found_cocktail.name.downcase} is now #{updated_rating}."
+      puts ""
+      puts "Thanks! Your updated favorites are: "
+      self.print_saved_cocktails
     else
       puts "Sorry, that drink could not be found in your favorites list."
     end
   end
 
   def leave
-    puts "Thanks for using the cocktail app #{self.name}. See you soon."
+    puts "Thanks for using the Cocktail app #{self.name}. See you soon."
   end
 
 end
