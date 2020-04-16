@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
     else
-      puts "Sorry, that search term doesn't match anything in the database."
+      puts "Sorry, that cocktail doesn't match anything in the database."
     end
 
     puts "Type in the name of the cocktail you want to save into your favorites:"
@@ -60,7 +60,9 @@ class User < ActiveRecord::Base
     found_ingredient.each do |cocktail|
       if cocktail[:name] == favorite_cocktail
         drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
-    self.add_favorite(found_ingredient)
+        self.add_favorite(found_ingredient)
+      end
+    end
   end
 
   def print_search_results(search_results)
@@ -68,6 +70,7 @@ class User < ActiveRecord::Base
       puts "Name: #{drink[:name]}"
       puts "Ingredients: #{drink[:ingredients].join(", ")}"
       puts "Instructions: #{drink[:instructions]}"
+      puts ""
       puts "*************"
     end
   end
@@ -129,8 +132,8 @@ class User < ActiveRecord::Base
         drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
         ingredients = cocktail[:ingredients]
         ingredients.each do |ingredient|
-          one = Ingredient.find_or_create_by(name: ingredient)
-          drink.ingredients << one
+          item = Ingredient.find_or_create_by(name: ingredient)
+          drink.ingredients << item
           end
           if self.cocktails.include? drink
             puts ""
@@ -161,9 +164,11 @@ class User < ActiveRecord::Base
     ingredients = cocktail.ingredients.map {|ingredient| ingredient.name}.join(", ")
     drink = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
     rating = drink.first.rating
+    puts ""
     puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
     puts "Ingredients: #{ingredients}"
     puts "Instructions: #{cocktail.instructions}"
+    puts ""
     puts "******************"
     end
   end
@@ -182,14 +187,17 @@ class User < ActiveRecord::Base
     puts "Let's update the rating of one of your drinks!"
     puts "Your current favorites are: "
     self.print_saved_cocktails
+    puts ""
     puts "What drink would you like to update?"
     cocktail = gets.chomp
     found_cocktail = self.cocktails.find_by(name: cocktail)
     if found_cocktail 
+      puts ""
       puts "What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best."
       updated_rating = gets.chomp
       cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
+      puts ""
       puts "Thanks! Your updated favorites are: "
       self.print_saved_cocktails
     else
@@ -198,7 +206,7 @@ class User < ActiveRecord::Base
   end
 
   def leave
-    puts "Thanks for using the cocktail app #{self.name}. See you soon."
+    puts "Thanks for using the Cocktail app #{self.name}. See you soon."
   end
 
 end

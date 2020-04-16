@@ -10,7 +10,7 @@ def welcome
   else
     user = User.create(name: name)
   end
-  puts "Welcome to the cocktail app, #{user.name}."
+  puts "Welcome to the Cocktail app, #{user.name}."
   user
 end
 
