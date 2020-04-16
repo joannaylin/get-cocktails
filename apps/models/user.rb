@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
     puts "Let's search for a cocktail. Enter a cocktail you want to see:"
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
-  
+    
     if found_cocktail_list
       found_cocktail_list.each do |drink|
         puts "Name: #{drink[:name]}"

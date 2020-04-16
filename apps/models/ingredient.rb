@@ -2,6 +2,7 @@ require 'pry'
 class Ingredient < ActiveRecord::Base
   has_many :cocktail_ingredients
   has_many :cocktails, through: :cocktail_ingredients
+  spinner = TTY::Spinner.new("[:spinner] Loading ...")
 
   def self.internet_search_cocktails(ingredient)
     
