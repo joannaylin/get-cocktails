@@ -24,9 +24,8 @@ def welcome
 end
 
 def main_menu(user)
-  prompt = TTY::Prompt.new
   space
-  answer = prompt.select("What would you like to do?") do |menu|
+  answer = TTY::Prompt.new.select("What would you like to do?") do |menu|
     menu.enum '.'
     menu.choice 'Search cocktails by name', 1
     menu.choice 'Search cocktails by ingredient', 2
@@ -54,9 +53,6 @@ def main_menu(user)
       main_menu(user)
     when 6
       user.leave
-    else
-      "Sorry, I don't recognize that option."
-      main_menu(user)
     end
 end
 
