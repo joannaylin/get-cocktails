@@ -4,10 +4,10 @@ class User < ActiveRecord::Base
 
   def search_cocktails
     space
-    puts "Let's search for a cocktail. Enter a cocktail you want to see:"
+    puts "Let's search for a cocktail. Enter the cocktail you want to see:"
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
-  
+
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
       self.add_favorite(found_cocktail_list)
@@ -31,6 +31,8 @@ class User < ActiveRecord::Base
       puts ""
       puts "Sorry, that ingredient could not be found."
     end
+
+    self.add_favorite(found_ingredient)
   end
 
   def print_search_results(search_results)
@@ -130,7 +132,6 @@ class User < ActiveRecord::Base
 
   def print_saved_cocktails
     self.cocktails.each_with_index do |cocktail, index|
-    # ingredients = cocktail.ingredients.map {|ingredient| ingredient.name}.join(", ")
     mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
     rating = mine.first.rating
     puts ""
@@ -142,7 +143,7 @@ class User < ActiveRecord::Base
     puts "******************"
     end
   end
-  
+
   def delete_favorite
     retrieve_user_favorites
     puts ""
