@@ -22,7 +22,7 @@ class Ingredient < ActiveRecord::Base
 
       array = []
       drink_ids.each do |drink_name|
-        drinks = Ingredient.test_id_cocktails(drink_name).first
+        drinks = Ingredient.id_cocktails(drink_name).first
         array << drinks
       end
 
@@ -64,36 +64,10 @@ class Ingredient < ActiveRecord::Base
     self.cocktails.each_with_index { |cocktail, index| puts "#{index + 1}.#{cocktail.name}" }
   end
 
-  def self.test_id_cocktails(search_term)
+  def self.id_cocktails(search_term)
   
     search_for_url = search_term.gsub(' ', '_')
     url = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=#{search_for_url}"
-    uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
-    body = response.body
-    cocktails = JSON.parse(body)
-    
-    array = []
-    cocktails["drinks"].each do |drink|
-      hash = {}
-      drink_name = drink["strDrink"]
-      drink_instructions = drink["strInstructions"]
-      drink_ingredients = {}
-      ingredient_string = "strIngredient1"
-      measure_string = "strMeasure1"
-      i = 1
-        while drink[ingredient_string]
-          ingredient = drink[ingredient_string]
-          drink_ingredients[ingredient] = drink[measure_string]
-          i += 1
-          ingredient_string = "strIngredient" + i.to_s
-          measure_string = "strMeasure" + i.to_s
-        end
-      hash[:name] = drink_name
-      hash[:ingredients] = drink_ingredients
-      hash[:instructions] = drink_instructions
-      array << hash
-      end
-    array
+    Cocktail.cocktail_search_helper(url)
   end
 end
