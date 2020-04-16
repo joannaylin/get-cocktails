@@ -12,12 +12,12 @@ NULLCMD = :
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /Users/samgorick/.rvm/rubies/ruby-2.6.1/include/ruby-2.6.0
+topdir = /Users/joannalin/.rvm/rubies/ruby-2.6.1/include/ruby-2.6.0
 hdrdir = $(topdir)
-arch_hdrdir = /Users/samgorick/.rvm/rubies/ruby-2.6.1/include/ruby-2.6.0/x86_64-darwin19
+arch_hdrdir = /Users/joannalin/.rvm/rubies/ruby-2.6.1/include/ruby-2.6.0/x86_64-darwin19
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/Users/samgorick/.rvm/rubies/ruby-2.6.1
+prefix = $(DESTDIR)/Users/joannalin/.rvm/rubies/ruby-2.6.1
 rubysitearchprefix = $(rubylibprefix)/$(sitearch)
 rubyarchprefix = $(rubylibprefix)/$(arch)
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
@@ -31,8 +31,8 @@ rubyhdrdir = $(includedir)/$(RUBY_VERSION_NAME)
 vendorarchdir = $(vendorlibdir)/$(sitearch)
 vendorlibdir = $(vendordir)/$(ruby_version)
 vendordir = $(rubylibprefix)/vendor_ruby
-sitearchdir = $(DESTDIR)./.gem.20200414-29827-jsw31c
-sitelibdir = $(DESTDIR)./.gem.20200414-29827-jsw31c
+sitearchdir = $(DESTDIR)./.gem.20200415-33600-12lfpii
+sitelibdir = $(DESTDIR)./.gem.20200415-33600-12lfpii
 sitedir = $(rubylibprefix)/site_ruby
 rubyarchdir = $(rubylibdir)/$(arch)
 rubylibdir = $(rubylibprefix)/$(ruby_version)
