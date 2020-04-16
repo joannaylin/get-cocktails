@@ -21,7 +21,8 @@ class User < ActiveRecord::Base
     space
     puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
     ingredient = gets.chomp
-    found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
+    found_ingredient = Ingredient.internet_search_cocktails(ingredient)
+    # found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
   
     if found_ingredient
       self.print_search_results(found_ingredient)
