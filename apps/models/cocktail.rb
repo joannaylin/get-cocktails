@@ -4,10 +4,6 @@ class Cocktail < ActiveRecord::Base
   has_many :user_cocktails
   has_many :users, through: :user_cocktails
 
-  def self.retrieve_cocktail_names
-    self.all.map { |cocktail| cocktail.name }
-  end
-
   def self.search_cocktails(search_term)
     cocktails = Cocktail.where("name like ?", "%#{search_term}%")
   end
@@ -15,6 +11,14 @@ class Cocktail < ActiveRecord::Base
   def self.internet_cocktails(search_term)
     search_for_url = search_term.gsub(' ', '_')
     url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{search_for_url}"
+    self.cocktail_search_helper(url)
+  end
+
+  def print_ingredient_names
+    self.ingredients.map { |ingredient| ingredient.name }
+  end
+
+  def self.cocktail_search_helper(url)
     uri = URI.parse(url)
     response = Net::HTTP.get_response(uri)
     body = response.body
@@ -44,10 +48,6 @@ class Cocktail < ActiveRecord::Base
       end
       array
     end
-  end
-
-  def print_ingredient_names
-    self.ingredients.map { |ingredient| ingredient.name }
   end
 
 end
