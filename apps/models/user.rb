@@ -3,9 +3,7 @@ class User < ActiveRecord::Base
   has_many :cocktails, through: :user_cocktails
 
   def search_cocktails
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Let's search for a cocktail. Enter a cocktail you want to see:"
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
@@ -13,19 +11,14 @@ class User < ActiveRecord::Base
     if found_cocktail_list
       self.print_search_results(found_cocktail_list)
     else
-      puts ""
-      puts "- - - - - - - - - - - - -"
-      puts ""
+      space
       puts "Sorry, that cocktail could not be found."
     end
-
     self.add_favorite(found_cocktail_list)
   end
 
   def search_ingredients
-    puts ""
-    puts "- - - - - - - - - - - - -"
-    puts ""
+    space
     puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
     ingredient = gets.chomp
     found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
@@ -45,7 +38,8 @@ class User < ActiveRecord::Base
   def print_search_results(search_results)
     search_results.each do |drink|
       puts "Name: #{drink[:name]}"
-      puts "Ingredients: #{drink[:ingredients].join(", ")}"
+      puts "Ingredients:"
+      drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
       puts "Instructions: #{drink[:instructions]}"
       puts "*************"
     end

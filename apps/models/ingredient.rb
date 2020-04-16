@@ -47,10 +47,10 @@ class Ingredient < ActiveRecord::Base
       drinks = Cocktail.internet_cocktails(drink_name).first
       array << drinks
     end
-
+    
     ingredient_count = Hash.new(0)
     array.each do |cocktail|
-      cocktail[:ingredients].each do |ingredient|
+      cocktail[:ingredients].each do |ingredient, measure|
         ingredient_count[ingredient] += 1
       end
     end

@@ -1,5 +1,11 @@
 require_relative '../config/environment'
 
+def space
+  puts ""
+  puts "- - - - - - - - - - - - -"
+  puts ""
+end
+
 def welcome
   font = TTY::Font.new(:doom)
   puts font.write("The Cocktail App")
