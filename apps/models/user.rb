@@ -69,10 +69,6 @@ class User < ActiveRecord::Base
       drink = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
       rating = drink.first.rating
       puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-
-        # drink = cocktail.user_cocktails.where(:id => self.id, :cocktail_id => cocktail.id)
-        # drink.first.rating
-
     end
   end
   
