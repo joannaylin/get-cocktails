@@ -84,8 +84,8 @@ class User < ActiveRecord::Base
     search_results.each do |cocktail|
       drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
       ingredients = cocktail[:ingredients]
-      ingredients.each do |ingredient|
-        one = Ingredient.find_or_create_by(name: ingredient)
+      ingredients.each do |ingredient, measure|
+        one = Ingredient.find_or_create_by(name: ingredient, measure: measure)
         drink.ingredients << one
         end
         if self.cocktails.include? drink
@@ -108,8 +108,8 @@ class User < ActiveRecord::Base
       if cocktail[:name] == favorite
         drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
         ingredients = cocktail[:ingredients]
-        ingredients.each do |ingredient|
-          item = Ingredient.find_or_create_by(name: ingredient)
+        ingredients.each do |ingredient, measure|
+          item = Ingredient.find_or_create_by(name: ingredient, measure: measure)
           drink.ingredients << item
           end
           if self.cocktails.include? drink
@@ -143,9 +143,8 @@ class User < ActiveRecord::Base
     rating = mine.first.rating
     puts ""
     puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-    puts "Ingredients: "
-    binding.pry
-      cocktail.ingredients.each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
+    puts "Ingredients:"
+      cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
     puts "Instructions: #{cocktail.instructions}"
     puts ""
     puts "******************"

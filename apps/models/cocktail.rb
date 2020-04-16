@@ -50,7 +50,4 @@ class Cocktail < ActiveRecord::Base
     self.ingredients.map { |ingredient| ingredient.name }
   end
 
-
-
-
 end
