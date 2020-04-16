@@ -7,17 +7,20 @@ def space
 end
 
 def welcome
-  font = TTY::Font.new(:doom)
-  puts font.write("The Cocktail App")
   puts "What is your name?"
   name = gets.chomp
-  if User.where("name like ?", "%#{name}%").first
-    user = User.where("name like ?", "%#{name}%").first
+  if name.match(/^[[:alpha:][:blank:]]+$/)
+    if User.where("name like ?", "%#{name}%").first
+      user = User.where("name like ?", "%#{name}%").first
+    else
+      user = User.create(name: name)
+    end
+    puts "Welcome to the Cocktail app, #{user.name}."
+    user
   else
-    user = User.create(name: name)
+    puts "This name isn't valid. Please try again:"
+    welcome
   end
-  puts "Welcome to the Cocktail app, #{user.name}."
-  user
 end
 
 def main_menu(user)
@@ -58,6 +61,8 @@ def main_menu(user)
 end
 
 def run
+  font = TTY::Font.new(:doom)
+  puts font.write("The Cocktail App")
   user = welcome
   main_menu(user)
 end
