@@ -74,26 +74,30 @@ class User < ActiveRecord::Base
       end
     end
   end
-
   # helper method
   # saves cocktail into favorites, mainting name, instructions, ingredients, and measurements
   def save_favorite(search_results, favorite)
     search_results.each do |cocktail|
       if cocktail[:name] == favorite
-        drink = Cocktail.find_or_create_by(name: cocktail[:name], instructions: cocktail[:instructions])
-        ingredients = cocktail[:ingredients]
-        ingredients.each do |ingredient, measure|
-          item = Ingredient.find_or_create_by(name: ingredient, measure: measure)
-          drink.ingredients << item
+        if !Cocktail.find_by(name: cocktail[:name], instructions: cocktail[:instructions])
+          drink = Cocktail.create(name: cocktail[:name], instructions: cocktail[:instructions])
+          ingredients = cocktail[:ingredients]
+          ingredients.each do |ingredient, measure|
+            item = Ingredient.find_or_create_by(name: ingredient, measure: measure)
+            drink.ingredients << item
           end
-          if self.cocktails.include? drink
-            space
-            puts Pastel.new.red("You've already added this drink to your favorites.")
-          else
-            self.cocktails << drink
+        else
+          drink = Cocktail.find_by(name: cocktail[:name], instructions: cocktail[:instructions])
+        end
+
+        if self.cocktails.include? drink
+          space
+          puts Pastel.new.red("You've already added this drink to your favorites.")
+        else
+          self.cocktails << drink
             space
             puts Pastel.new.magenta("#{drink.name} has been added to your favorites.")
-          end
+        end
       end
     end
   end
