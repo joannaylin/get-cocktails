@@ -36,7 +36,7 @@ class Ingredient < ActiveRecord::Base
         end
 
         ingredient_results = ingredient_count.sort_by{|ingredient, number| number}.reverse
-        top_three = ingredient_results[1..3].to_h
+        top_three = ingredient_results[1..3]
         options = top_three.map {|k,v| "#{k}- would return #{v} results" }
         space
         additional_ingredient = TTY::Prompt.new.select("Your search returned #{array.length} results! Narrow your search by adding another ingredient:", options)
