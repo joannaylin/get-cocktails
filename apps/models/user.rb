@@ -34,9 +34,13 @@ class User < ActiveRecord::Base
 
   def print_search_results(search_results)
     search_results.each do |drink|
-      puts "Name: #{drink[:name]}"
+      pastel = Pastel.new
+      puts ""
+      puts pastel.cyan.bold("Name: #{drink[:name]}")
+      puts ""
       puts "Ingredients:"
       drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
+      puts ""
       puts "Instructions: #{drink[:instructions]}"
       puts ""
       puts "*************"
@@ -128,7 +132,8 @@ class User < ActiveRecord::Base
     if self.cocktails.length > 0
       space
       puts "Let's update the rating of one of your drinks!"
-      puts "Your current favorites are:"
+      pastel = Pastel.new
+      puts pastel.italic.bold("Your current favorites are: ")
       space
       self.print_saved_cocktails
       space
@@ -139,6 +144,8 @@ class User < ActiveRecord::Base
       updated_rating = TTY::Prompt.new.select("What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best.", (1..10).to_a)
       cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
+      pastel = Pastel.new
+      puts pastel.italic.bold("Thanks! Your updated favorites are: ")
       self.print_saved_cocktails
     else
       self.print_saved_cocktails
@@ -146,7 +153,8 @@ class User < ActiveRecord::Base
   end
 
   def leave
-    puts "Thanks for using The Cocktail App #{self.name}. See you soon."
+    pastel = Pastel.new
+    puts pastel.italic.bold.cyan("Thanks for using the Cocktail app #{self.name}. See you soon.")
   end
 
 end
