@@ -90,7 +90,6 @@ def welcome
     puts "This name isn't valid. Please try again:"
     welcome
   end
-  user
 end
 
 def main_menu(user)
