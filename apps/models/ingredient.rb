@@ -16,7 +16,7 @@ class Ingredient < ActiveRecord::Base
       drink_ids = cocktails["drinks"].map do |drink|
         drink["idDrink"]
       end
-    
+      
       spinner = TTY::Spinner.new("[:spinner] Loading ...")
       spinner.auto_spin
 
@@ -64,8 +64,8 @@ class Ingredient < ActiveRecord::Base
     self.cocktails.each_with_index { |cocktail, index| puts "#{index + 1}.#{cocktail.name}" }
   end
 
+  # search cocktail database by id to prevent errors with special characters in cocktail name 
   def self.id_cocktails(search_term)
-  
     search_for_url = search_term.gsub(' ', '_')
     url = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=#{search_for_url}"
     Cocktail.cocktail_search_helper(url)
