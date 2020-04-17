@@ -2,9 +2,10 @@ class User < ActiveRecord::Base
   has_many :user_cocktails
   has_many :cocktails, through: :user_cocktails
 
+  # search for cocktails by name in api
   def search_cocktails
     space
-    puts "Let's search for a cocktail. Enter the cocktail you want to see:"
+    puts Pastel.new.magenta("Let's search for a cocktail. Enter the cocktail you want to see:")
     cocktail = gets.chomp
     found_cocktail_list = Cocktail.internet_cocktails(cocktail)
 
@@ -14,13 +15,14 @@ class User < ActiveRecord::Base
       self.add_favorite(found_cocktail_list)
     else
       space
-      puts "Sorry, that cocktail could not be found."
+      puts Pastel.new.red("Sorry, that cocktail could not be found.")
     end
   end
 
+  # search for cocktails by ingredients in api
   def search_ingredients
     space
-    puts "Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:"
+    puts Pastel.new.magenta("Let's search for cocktails with the ingredient you had in mind. Enter your ingredient:")
     ingredient = gets.chomp
     found_ingredient = Ingredient.multiple_search_cocktails(ingredient)
     if found_ingredient
@@ -28,21 +30,29 @@ class User < ActiveRecord::Base
       self.add_favorite(found_ingredient)
     else
       space
-      puts "Sorry, that ingredient could not be found."
+      puts Pastel.new.red("Sorry, that ingredient could not be found.")
     end
   end
 
+  # helper method
+  # prints formatted cocktail name, ingredients, and instructions
   def print_search_results(search_results)
     search_results.each do |drink|
-      puts "Name: #{drink[:name]}"
-      puts "Ingredients:"
+      puts ""
+      puts Pastel.new.cyan.bold("Name: #{drink[:name]}")
+      puts ""
+      puts Pastel.new.underline("Ingredients:")
       drink[:ingredients].each { |ingredient, measure| puts "#{ingredient}: #{measure}"}
-      puts "Instructions: #{drink[:instructions]}"
+      puts ""
+      puts Pastel.new.underline("Instructions:") 
+      puts "#{drink[:instructions]}"
       puts ""
       puts "*************"
     end
   end
 
+  # helper method
+  # handles input for saving cocktail in favorites
   def add_favorite(search_results)
     arr = ["Yes", "No"]
     if search_results.length == 1
@@ -65,7 +75,8 @@ class User < ActiveRecord::Base
     end
   end
 
-
+  # helper method
+  # saves cocktail into favorites, mainting name, instructions, ingredients, and measurements
   def save_favorite(search_results, favorite)
     search_results.each do |cocktail|
       if cocktail[:name] == favorite
@@ -77,37 +88,42 @@ class User < ActiveRecord::Base
           end
           if self.cocktails.include? drink
             space
-            puts "You've already added this drink to your favorites."
+            puts Pastel.new.red("You've already added this drink to your favorites.")
           else
             self.cocktails << drink
             space
-            puts "#{drink.name} has been added to your favorites."
+            puts Pastel.new.magenta("#{drink.name} has been added to your favorites.")
           end
       end
     end
   end
 
+  # prints users favorites 
   def print_saved_cocktails
     if self.cocktails.length > 0
       space
-      puts "Your saved cocktails are:"
+      puts Pastel.new.magenta("Your saved cocktails are:")
       self.cocktails.each_with_index do |cocktail, index|
-      mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
-      rating = mine.first.rating
-      puts ""
-      puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
-      puts "Ingredients:"
-        cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
-      puts "Instructions: #{cocktail.instructions}"
-      puts ""
-      puts "******************"
+        mine = cocktail.user_cocktails.where(:user_id => self.id, :cocktail_id => cocktail.id)
+        rating = mine.first.rating
+        puts ""
+        puts "#{index +1}. #{cocktail.name} -- rating: #{rating}"
+        puts Pastel.new.underline("Ingredients:")
+          cocktail.ingredients.each { |ingredient| puts "#{ingredient.name}: #{ingredient.measure}"}
+        puts ""
+        puts Pastel.new.underline("Instructions:")
+        puts "#{cocktail.instructions}"
+        puts ""
+        puts "******************"
       end
+      puts drink3
     else
       space
-      puts "You have no saved cocktails to display, #{self.name}."
+      puts Pastel.new.red("You have no saved cocktails to display, #{self.name}.")
     end
   end
 
+  # removes cocktail from users favorites 
   def delete_favorite
     if self.cocktails.length > 0
       space
@@ -117,18 +133,19 @@ class User < ActiveRecord::Base
       cocktail_to_delete = TTY::Prompt.new.select("Which cocktail do you want to remove?", names)
       self.cocktails = self.cocktails.reject { |cocktail| cocktail.name == cocktail_to_delete}
       space
-      puts "#{cocktail_to_delete} has been removed from your favorites. Your saved cocktails are now:"
+      puts Pastel.new.magenta("#{cocktail_to_delete} has been removed from your favorites. Your saved cocktails are now:")
       self.print_saved_cocktails
     else
       self.print_saved_cocktails
     end
   end
 
+  # update rating for cocktail in users favorites 
   def update_rating
     if self.cocktails.length > 0
       space
-      puts "Let's update the rating of one of your drinks!"
-      puts "Your current favorites are:"
+      puts Pastel.new.magenta("Let's update the rating of one of your drinks!")
+      puts Pastel.new.italic("Your current favorites are: ")
       space
       self.print_saved_cocktails
       space
@@ -139,14 +156,17 @@ class User < ActiveRecord::Base
       updated_rating = TTY::Prompt.new.select("What rating would you give #{found_cocktail.name} on a scale of 1-10? 1 being the worst, and 10 being the best.", (1..10).to_a)
       cocktail = found_cocktail.user_cocktails.where(:user_id => self.id)
       cocktail.update(rating: updated_rating)
+      puts Pastel.new.italic("Thanks! Your updated favorites are: ")
       self.print_saved_cocktails
     else
       self.print_saved_cocktails
     end
   end
 
+  # exit app/menu
   def leave
-    puts "Thanks for using The Cocktail App #{self.name}. See you soon."
+    pastel = Pastel.new
+    puts pastel.italic.bold.cyan("Thanks for using the Cocktail app #{self.name}. See you soon.")
   end
 
 end

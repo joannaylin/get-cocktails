@@ -6,8 +6,76 @@ def space
   puts ""
 end
 
+def drink1 
+  puts <<-'EOF'
+      *   *  .  *     
+      ..  *   o             
+    o   *  .   *      
+      * .  .o *
+     ________               
+    (________)                  
+    |    o   |                              
+    |   o    |                               
+    | o    o |                        
+    | o  o   |                            
+    |      o |                                             
+    ( o      )                         
+     \   o  /                                      
+      \    /                                     
+       \  /                              
+        ||                                        
+        ||                                 
+        ||                              
+        ||                         
+     ___||___                            
+    /   ||   \                         
+    \________/                         
+  EOF
+end
+
+def drink2
+  puts <<-'EOF'          
+   *                           )   *
+                          )        (                   (
+                (          )     (             )
+           )    *           )        )  (
+          (                (        (      *           
+           )          H     )       
+                     [ ]            (
+              (  *   |-|       *     )    (
+        *      )     |_|        .         
+              (      | |    .  
+        )           /   \     .    ' .        *
+       (           |_____|  '  .    .  
+                   | ___ |  \~~~/  ' .   ( 
+               *   | \ / |   \_/  \~~~/   )
+                   | _Y_ |    |    \_/   
+       *     jgs   |-----|  __|__   |      
+                   `-----`        __|__    
+  EOF
+end
+
+def drink3
+  puts <<-'EOF'
+  .
+  .
+ . .
+  ...
+\~~~~~/
+ \   /
+  \ /
+   V
+   |
+   |
+  ---
+  EOF
+end
+
+
 def welcome
-  puts "What is your name?"
+  puts "#{drink1}"
+  pastel = Pastel.new
+  puts pastel.italic.cyan("What is your name?")
   name = gets.chomp
   if name.match(/^[[:alpha:][:blank:]]+$/)
     if User.where("name like ?", "%#{name}%").first
@@ -15,12 +83,14 @@ def welcome
     else
       user = User.create(name: name)
     end
-      puts "Welcome to The Cocktail App, #{user.name}."
+      pastel = Pastel.new
+      puts pastel.italic.cyan("Welcome to The Cocktail App, #{user.name}.")
       user
   else
     puts "This name isn't valid. Please try again:"
     welcome
   end
+  user
 end
 
 def main_menu(user)
@@ -58,7 +128,7 @@ end
 
 def run
   font = TTY::Font.new(:doom)
-  puts font.write("The Cocktail App")
+  puts Pastel.new.cyan(font.write("The Cocktail App"))
   user = welcome
   main_menu(user)
 end

@@ -18,5 +18,4 @@ ActiveRecord::Base.establish_connection(connection_details)
 ActiveRecord::Base.logger = nil
 
 require 'tty-prompt'
-require 'tty-color'
-include TTY::Color
+
