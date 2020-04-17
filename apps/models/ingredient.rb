@@ -4,7 +4,6 @@ class Ingredient < ActiveRecord::Base
   has_many :cocktails, through: :cocktail_ingredients
 
   def self.multiple_search_cocktails(ingredient)
-    
     search_for_url = ingredient.gsub(' ', '_')
     url = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=#{search_for_url}"
     uri = URI.parse(url)
@@ -35,23 +34,14 @@ class Ingredient < ActiveRecord::Base
             ingredient_count[ingredient] += 1
           end
         end
-        option_one = ingredient_count.sort_by{|ingredient, number| number}.reverse[1]
-        option_two = ingredient_count.sort_by{|ingredient, number| number}.reverse[2]
-        option_three = ingredient_count.sort_by{|ingredient, number| number}.reverse[3]
+
+        ingredient_results = ingredient_count.sort_by{|ingredient, number| number}.reverse
+        top_three = ingredient_results[1..3]
+        options = top_three.map {|k,v| "#{k}- would return #{v} results" }
         space
-        puts "Your search returned #{array.length} results! Why not add another ingredient?"
-        puts "**********"
-        puts "#{option_one[0]} would return #{option_one[1]} results"
-        puts "**********"
-        puts "#{option_two[0]} would return #{option_two[1]} results"
-        puts "**********"
-        puts "#{option_three[0]} would return #{option_three[1]} results"
-        space
-        puts "********** Enter additional search term: **********"
-        space
-        additional_ingredient = gets.chomp
+        additional_ingredient = TTY::Prompt.new.select("Your search returned #{array.length} results! Narrow your search by adding another ingredient:", options)
         new_arr = array.select do |cocktail|
-          cocktail[:ingredients].include? additional_ingredient
+          cocktail[:ingredients].include? additional_ingredient.split("-")[0]
         end
         new_arr
       else
