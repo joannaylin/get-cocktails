@@ -73,11 +73,9 @@ end
 
 
 def welcome
-  font = TTY::Font.new(:doom)
-  pastel = Pastel.new
-  puts pastel.cyan(font.write("The Cocktail App"))
   puts "#{drink1}"
-  puts "What is your name?"
+  pastel = Pastel.new
+  puts pastel.italic.cyan("What is your name?")
   name = gets.chomp
   if name.match(/^[[:alpha:][:blank:]]+$/)
     if User.where("name like ?", "%#{name}%").first
@@ -85,14 +83,13 @@ def welcome
     else
       user = User.create(name: name)
     end
-      puts "Welcome to The Cocktail App, #{user.name}."
+      pastel = Pastel.new
+      puts pastel.italic.cyan("Welcome to The Cocktail App, #{user.name}.")
       user
   else
     puts "This name isn't valid. Please try again:"
     welcome
   end
-  pastel = Pastel.new
-  puts pastel.italic.bold("Welcome to the Cocktail app, #{user.name}.")
   user
 end
 
@@ -131,7 +128,7 @@ end
 
 def run
   font = TTY::Font.new(:doom)
-  puts font.write("The Cocktail App")
+  puts Pastel.new.cyan(font.write("The Cocktail App"))
   user = welcome
   main_menu(user)
 end
