@@ -79,10 +79,17 @@ def welcome
   puts "#{drink1}"
   puts "What is your name?"
   name = gets.chomp
-  if User.where("name like ?", "%#{name}%").first
-    user = User.where("name like ?", "%#{name}%").first
+  if name.match(/^[[:alpha:][:blank:]]+$/)
+    if User.where("name like ?", "%#{name}%").first
+      user = User.where("name like ?", "%#{name}%").first
+    else
+      user = User.create(name: name)
+    end
+      puts "Welcome to The Cocktail App, #{user.name}."
+      user
   else
-    user = User.create(name: name)
+    puts "This name isn't valid. Please try again:"
+    welcome
   end
   pastel = Pastel.new
   puts pastel.italic.bold("Welcome to the Cocktail app, #{user.name}.")
@@ -90,9 +97,8 @@ def welcome
 end
 
 def main_menu(user)
-  prompt = TTY::Prompt.new
   space
-  answer = prompt.select("What would you like to do?") do |menu|
+  answer = TTY::Prompt.new.select("What would you like to do?") do |menu|
     menu.enum '.'
     menu.choice 'Search cocktails by name', 1
     menu.choice 'Search cocktails by ingredient', 2
@@ -110,7 +116,7 @@ def main_menu(user)
       user.search_ingredients
       main_menu(user)
     when 3
-      user.retrieve_user_favorites
+      user.print_saved_cocktails
       main_menu(user)
     when 4
       user.update_rating
@@ -120,13 +126,12 @@ def main_menu(user)
       main_menu(user)
     when 6
       user.leave
-    else
-      "Sorry, I don't recognize that option."
-      main_menu(user)
     end
 end
 
 def run
+  font = TTY::Font.new(:doom)
+  puts font.write("The Cocktail App")
   user = welcome
   main_menu(user)
 end
